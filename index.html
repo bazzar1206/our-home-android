@@ -304,6 +304,34 @@ body[data-theme="light"][data-card-pictures="off"] .shop-card strong,
 body[data-theme="light"][data-card-pictures="off"] .shop-card .contact-heading{color:#221b29!important;text-shadow:none!important;filter:none!important;-webkit-filter:none!important}
 body[data-theme="light"][data-card-pictures="off"] .item .muted,
 body[data-theme="light"][data-card-pictures="off"] .item .finance-summary-line{color:#514858!important;text-shadow:none!important}
+
+/* v2.14: compact collapsed Lists and reliable light/photo-off text */
+.shop-card[data-list]{padding:10px 14px!important;margin:9px 0!important}
+.shop-card[data-list]:not([open]){min-height:0!important}
+.shop-card[data-list]>.shop-heading{min-height:44px!important;gap:10px!important}
+.shop-card[data-list]>.shop-heading h2{font-size:19px!important;line-height:1.25!important;margin:0!important}
+.shop-card[data-list] .shop-menu-btn{min-width:42px!important;padding:7px 10px!important}
+.shop-card[data-list][open] .shop-body{padding-top:12px}
+body[data-theme="light"][data-card-pictures="off"] .home-tiles .tile,
+body[data-theme="light"][data-card-pictures="off"] .home-tiles .tile *,
+body[data-theme="light"][data-card-pictures="off"] .item,
+body[data-theme="light"][data-card-pictures="off"] .item .record-toggle,
+body[data-theme="light"][data-card-pictures="off"] .item .record-toggle *,
+body[data-theme="light"][data-card-pictures="off"] .item .record-detail,
+body[data-theme="light"][data-card-pictures="off"] .item .record-detail *,
+body[data-theme="light"][data-card-pictures="off"] .item .finance-details,
+body[data-theme="light"][data-card-pictures="off"] .item .finance-details *,
+body[data-theme="light"][data-card-pictures="off"] .item .finance-linked-contracts,
+body[data-theme="light"][data-card-pictures="off"] .item .finance-linked-contracts *,
+body[data-theme="light"][data-card-pictures="off"] .item .attachment-disclosure,
+body[data-theme="light"][data-card-pictures="off"] .item .attachment-disclosure *,
+body[data-theme="light"][data-card-pictures="off"] .item .record-related,
+body[data-theme="light"][data-card-pictures="off"] .item .record-related *,
+body[data-theme="light"][data-card-pictures="off"] .shop-card,
+body[data-theme="light"][data-card-pictures="off"] .shop-card .contact-detail,
+body[data-theme="light"][data-card-pictures="off"] .shop-card .contact-heading{color:#221b29!important;text-shadow:none!important;-webkit-text-stroke:0!important;filter:none!important}
+body[data-theme="light"][data-card-pictures="off"] .item .muted,
+body[data-theme="light"][data-card-pictures="off"] .item .finance-summary-line{color:#514858!important;text-shadow:none!important}
 </style></head><body data-theme="amoled"><main class="app"><header><h1 id="title">Our Home</h1><div class="header-settings-wrap"><button class="iconbtn" aria-label="Open settings menu" aria-expanded="false" aria-controls="headerSettingsMenu" id="settings">⚙</button><div id="headerSettingsMenu" class="header-settings-menu" hidden><button type="button" id="headerEditDashboard">✎ Edit dashboard</button><button type="button" id="headerCardDisplay" hidden>▤ Card display</button><button type="button" id="headerMainSettings">⚙ Main settings</button></div></div></header><div id="content"></div></main><nav class="nav" aria-label="Main navigation" id="nav"></nav><script>
 'use strict';
 const sections=[['Insurance','🛡️'],['Finances','💷'],['Contracts','📑'],['Inventory','📦'],['Documents','📄'],['Lists','☑️'],['Family','👨‍👩‍👧'],['Family Tasks','✅'],['Calendar','📅'],['Home Network','📡'],['Contacts','📞'],['Notes','📝'],['House Info','🏠'],['Maintenance','🔧']];
@@ -583,7 +611,7 @@ function searchAnyValue(value,term,depth=0){if(depth>7||value==null)return false
 async function render(){document.getElementById('title').textContent=page==='Home'?'Our Home':page;const c=document.getElementById('content');
 if(page==='Home'){
 const urgent=(await all()).filter(r=>r.section==='Insurance'&&!r.archived&&r.category!=='Travel').map(r=>({...r,days:policyDays(r.renewal)})).filter(r=>r.days!==null&&r.days<=60).sort((a,b)=>a.days-b.days);
-c.innerHTML='<div class="test-data-banner" role="note">TEST DATA ONLY — All information in this app is fictional test data. No real personal or financial records.</div><p class="sub">Everything in one place</p>'+(urgent.length?'<section aria-label="Insurance expiry alerts"><h2 class="insurance-group">⚠️ Insurance alerts <small>('+urgent.length+')</small></h2>'+urgent.map(r=>'<div class="home-alert '+(r.days<0?'expired':'soon')+'"><button type="button" data-open-policy="'+esc(r.id)+'"><strong>'+categoryDisplay(r.category)+' '+esc(r.category==='Car'?'Vehicle':r.category||'Home')+' - '+esc((r.category==='Vehicle'||r.category==='Car')&&r.registration?r.registration.toUpperCase()+' - ':'')+esc(r.title)+'</strong><small>'+(r.category==='Travel'?(r.travelDate?'Start '+shortDate(r.travelDate)+' · ':'')+'End '+shortDate(r.renewal):r.days<0?'Expired':r.days===0?'Expires today':r.days+' '+(r.days===1?'day':'days')+' remaining')+'</small></button></div>').join('')+'</section>':'')+(layoutEditing?'<p class="layout-help">Press and hold a card to drag it. Tap the eye to hide or show a card. Hidden cards move to the bottom.</p><div class="dashboard-edit-actions"><button class="btn dashboard-done" id="editHomeLayout">Done editing</button><button class="btn secondary" id="globalTileSize">Card size: '+esc(localStorage.getItem('ourhome-tile-size')==='large'?'large':'small')+'</button><label class="dashboard-pictures-toggle"><input type="checkbox" id="dashboardPicturesChoice" '+(localStorage.getItem('ourhome-card-pictures')!=='off'?'checked':'')+'> Show pictures on cards</label></div>':'')+tiles()+'<p class="home-version">Our Home v2.13</p>';
+c.innerHTML='<div class="test-data-banner" role="note">TEST DATA ONLY — All information in this app is fictional test data. No real personal or financial records.</div><p class="sub">Everything in one place</p>'+(urgent.length?'<section aria-label="Insurance expiry alerts"><h2 class="insurance-group">⚠️ Insurance alerts <small>('+urgent.length+')</small></h2>'+urgent.map(r=>'<div class="home-alert '+(r.days<0?'expired':'soon')+'"><button type="button" data-open-policy="'+esc(r.id)+'"><strong>'+categoryDisplay(r.category)+' '+esc(r.category==='Car'?'Vehicle':r.category||'Home')+' - '+esc((r.category==='Vehicle'||r.category==='Car')&&r.registration?r.registration.toUpperCase()+' - ':'')+esc(r.title)+'</strong><small>'+(r.category==='Travel'?(r.travelDate?'Start '+shortDate(r.travelDate)+' · ':'')+'End '+shortDate(r.renewal):r.days<0?'Expired':r.days===0?'Expires today':r.days+' '+(r.days===1?'day':'days')+' remaining')+'</small></button></div>').join('')+'</section>':'')+(layoutEditing?'<p class="layout-help">Press and hold a card to drag it. Tap the eye to hide or show a card. Hidden cards move to the bottom.</p><div class="dashboard-edit-actions"><button class="btn dashboard-done" id="editHomeLayout">Done editing</button><button class="btn secondary" id="globalTileSize">Card size: '+esc(localStorage.getItem('ourhome-tile-size')==='large'?'large':'small')+'</button><label class="dashboard-pictures-toggle"><input type="checkbox" id="dashboardPicturesChoice" '+(localStorage.getItem('ourhome-card-pictures')!=='off'?'checked':'')+'> Show pictures on cards</label></div>':'')+tiles()+'<p class="home-version">Our Home v2.14</p>';
 document.querySelectorAll('[data-open-policy]').forEach(b=>b.onclick=()=>openRecord('Insurance',b.dataset.openPolicy));if(layoutEditing)document.getElementById('editHomeLayout').onclick=()=>{layoutEditing=false;render()};bindLayoutEditor();fitDashboardTileText();if(layoutEditing)document.getElementById('dashboardPicturesChoice').onchange=e=>{localStorage.setItem('ourhome-card-pictures',e.target.checked?'on':'off');applyAppearance();fitDashboardTileText()};if(layoutEditing)document.getElementById('globalTileSize').onclick=()=>{const current=localStorage.getItem('ourhome-tile-size')==='large'?'large':'small';localStorage.setItem('ourhome-tile-size',current==='small'?'large':'small');render()};
 }
 else if(page==='Settings'){
