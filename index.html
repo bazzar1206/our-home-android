@@ -244,6 +244,11 @@ body[data-theme="light"] .item[style*="--record-photo"]::before{filter:brightnes
 /* Equal-width Inventory toolbar buttons */
 .inventory-toolbar{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%}
 .inventory-toolbar .btn{width:100%;min-width:0;max-width:none;display:flex;align-items:center;justify-content:center;padding:12px 5px!important;font-size:clamp(12px,3.5vw,16px)!important;white-space:nowrap}
+
+/* Keep open record action menus above adjacent cards on all pages. */
+.item:has(.record-menu [role="menu"]:not([hidden])){position:relative!important;z-index:250!important;overflow:visible!important}
+.record-menu:has([role="menu"]:not([hidden])){z-index:251!important}
+.record-menu [role="menu"]:not([hidden]){z-index:10000!important}
 </style></head><body data-theme="amoled"><main class="app"><header><h1 id="title">Our Home</h1><div class="header-settings-wrap"><button class="iconbtn" aria-label="Open settings menu" aria-expanded="false" aria-controls="headerSettingsMenu" id="settings">⚙</button><div id="headerSettingsMenu" class="header-settings-menu" hidden><button type="button" id="headerEditDashboard">✎ Edit dashboard</button><button type="button" id="headerCardDisplay" hidden>▤ Card display</button><button type="button" id="headerMainSettings">⚙ Main settings</button></div></div></header><div id="content"></div></main><nav class="nav" aria-label="Main navigation" id="nav"></nav><script>
 'use strict';
 const sections=[['Insurance','🛡️'],['Finances','💷'],['Contracts','📑'],['Inventory','📦'],['Documents','📄'],['Shopping Lists','🛒'],['Family Tasks','✅'],['Calendar','📅'],['Home Network','📡'],['Contacts','📞'],['Notes','📝'],['Renewals','⏰'],['House Info','🏠'],['Maintenance','🔧']];
