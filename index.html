@@ -483,8 +483,8 @@ function contactsFromRecords(records){const found=[];for(const r of records){if(
 if(!['Insurance','Contracts'].includes(r.section)){const phone=contactPhone(r),email=contactEmail(r),name=r.contactName||r.contactPerson||r.provider||r.company||r.organisation||r.organization;if((phone||email)&&name)found.push({id:'linked-'+r.id,section:'Contacts',title:name,phone,email,company:r.company||r.provider||'',_source:r.section,_sourceId:r.id,_derived:true});continue}
 const name=(r.section==='Insurance'?(r.insurer||r.provider||r.company||r.title):(r.provider||r.employer||r.company||r.organisation||r.title))||r.contactName||r.contactPerson;if(!name)continue;
 const rawContact=[r.claimsContact,r.contact,r.contactDetails].filter(v=>typeof v==='string').join(' ');
-const phone=r.contactPhone||r.supportPhone||r.providerPhone||r.insurerPhone||r.customerServicePhone||r.telephone||r.phone||((rawContact.match(/(?:\\+?\\d[\\d\\s().-]{7,}\\d)/)||[])[0]||'').trim();
-const email=r.contactEmail||r.supportEmail||r.providerEmail||r.insurerEmail||r.email||((rawContact.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}/i)||[])[0]||'');
+const phone=r.contactPhone||r.supportPhone||r.providerPhone||r.insurerPhone||r.customerServicePhone||r.telephone||r.phone||((rawContact.match(/(?:\+?\d[\d\s().-]{7,}\d)/)||[])[0]||'').trim();
+const email=r.contactEmail||r.supportEmail||r.providerEmail||r.insurerEmail||r.email||((rawContact.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)||[])[0]||'');
 if(!phone&&!email)continue;
 const category=r.section==='Insurance'?'Insurance':'Services';
 const details={title:name,company:name,category,phone,email,website:r.website||r.providerWebsite||'',address:r.contactAddress||r.providerAddress||r.address||'',notes:r.contactNotes||'',_source:r.section,_sourceId:r.id,_derived:true};
